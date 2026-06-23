@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rapport complet · Renault Clio IV — Historique Véhicule</title>
+<style>
+/* ============================================================
+   Historique Véhicule — Prototype · Design tokens (charte Figma)
+   ============================================================ */
+:root {
+  --text: #0a2540;
+  --text-muted: #687385;
+  --text-subtle: #8792a2;
+  --primary: #635bff;
+  --primary-dark: #524bdb;
+  --primary-tint: #edebfe;
+  --border: #e3e8ee;
+  --success: #1a8245;
+  --success-tint: #d7f7df;
+  --warning: #d97706;
+  --warning-tint: #fef3e2;
+  --bg: #f6f9fc;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(10, 37, 64, 0.04), 0 4px 16px rgba(10, 37, 64, 0.05);
+  --shadow-lg: 0 10px 40px rgba(10, 37, 64, 0.18);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* ---------- Logo / Header ---------- */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  height: 68px;
+  display: flex;
+  align-items: center;
+}
+.site-header.on-hero { background: transparent; border-bottom: none; }
+.site-header .container { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 17px; text-decoration: none; }
+.logo .mark { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #7a73ff, #635bff); }
+.nav { display: flex; align-items: center; gap: 26px; font-size: 14px; }
+.nav a { color: var(--text-muted); text-decoration: none; }
+.nav a:hover { color: var(--text); }
+.nav .active { color: var(--primary); font-weight: 600; }
+
+/* on-hero header (white text) */
+.on-hero .logo { color: #fff; }
+.on-hero .nav a { color: rgba(255,255,255,.85); }
+.on-hero .nav a:hover { color: #fff; }
+/* le bouton plein garde sa couleur de marque, pas le blanc de la nav */
+.on-hero .nav a.btn-ghost-light { color: var(--primary); }
+.on-hero .nav a.btn-ghost-light:hover { color: var(--primary-dark); background: #fff; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: 14px; font-weight: 600; padding: 11px 18px; border-radius: 10px;
+  border: 1px solid var(--border); background: #fff; color: var(--text);
+  cursor: pointer; transition: all .15s; text-decoration: none; font-family: inherit;
+}
+.btn svg { width: 16px; height: 16px; }
+.btn:hover { background: #f6f9fc; }
+.btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-ghost-light { background: #fff; color: var(--primary); border-color: #fff; }
+.btn-block { width: 100%; padding: 14px; font-size: 15px; }
+
+/* ---------- Badges / pills ---------- */
+.badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+.badge svg { width: 13px; height: 13px; }
+.badge-success { background: var(--success-tint); color: var(--success); }
+.badge-warning { background: var(--warning-tint); color: var(--warning); }
+.badge-neutral { background: #eef1f6; color: var(--text-muted); }
+.badge-primary { background: var(--primary-tint); color: var(--primary); }
+
+/* ---------- Card / section ---------- */
+.card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 26px 28px; margin-bottom: 24px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 6px; }
+.section-title { display: flex; align-items: center; gap: 10px; font-size: 21px; font-weight: 700; letter-spacing: -0.01em; }
+.section-title svg { width: 20px; height: 20px; color: var(--primary); }
+.section-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; }
+
+main { padding: 28px 0 48px; }
+
+/* ---------- Breadcrumb ---------- */
+.breadcrumb { display: flex; gap: 8px; font-size: 13px; color: var(--text-muted); padding: 28px 0 4px; }
+.breadcrumb a { text-decoration: none; }
+.breadcrumb a:hover { color: var(--text); }
+.breadcrumb .sep { color: var(--text-subtle); }
+.breadcrumb .current { color: var(--text); font-weight: 500; }
+
+/* ---------- Footer ---------- */
+.site-footer { background: #0a2540; color: #c7d0db; }
+.footer-top { display: grid; grid-template-columns: 320px repeat(4, 1fr); gap: 32px; padding: 56px 0 0; }
+.footer-brand .logo { color: #fff; margin-bottom: 16px; }
+.footer-brand .logo .mark { background: rgba(255,255,255,.15); }
+.footer-brand p { font-size: 13px; line-height: 1.6; color: #8da3bb; max-width: 320px; }
+.footer-col h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+.footer-col a { display: block; font-size: 14px; color: #8da3bb; text-decoration: none; margin-bottom: 12px; }
+.footer-col a:hover { color: #fff; }
+.footer-divider { border-top: 1px solid rgba(255,255,255,.1); margin: 44px 0 0; }
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding: 24px 0 36px; font-size: 13px; color: #6b7f96; }
+.socials { display: flex; gap: 12px; }
+.socials span { width: 34px; height: 34px; border-radius: 999px; background: rgba(255,255,255,.08); display:inline-block; }
+
+/* ============================================================
+   P1-01 — Accueil / Recherche
+   ============================================================ */
+.hero {
+  background: linear-gradient(120deg, #6a3df0 0%, #7b5bff 38%, #b14bd8 70%, #ff4d8d 100%);
+  color: #fff; padding-bottom: 72px;
+}
+.hero-content { max-width: 900px; margin: 0 auto; text-align: center; padding: 56px 24px 0; }
+.hero h1 { font-size: 52px; font-weight: 800; line-height: 1.08; letter-spacing: -0.02em; }
+.hero .lead { font-size: 18px; color: rgba(255,255,255,.88); margin: 22px auto 0; max-width: 640px; }
+.search-card {
+  background: #fff; border-radius: 16px; box-shadow: var(--shadow-lg);
+  margin: 36px auto 0; max-width: 900px; padding: 16px;
+  display: grid; grid-template-columns: 1fr 240px 140px; gap: 14px; align-items: end;
+}
+.field label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 8px; }
+.field input, .field select {
+  width: 100%; height: 47px; border: 1px solid var(--border); border-radius: 10px;
+  padding: 0 14px; font-size: 15px; font-family: inherit; color: var(--text); background: #fff;
+}
+.field input:focus, .field select:focus { outline: 2px solid var(--primary); border-color: var(--primary); }
+.search-card .btn-primary { height: 49px; }
+.reassurance { display: flex; gap: 36px; justify-content: center; margin-top: 22px; font-size: 14px; }
+.reassurance .item { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,.92); }
+.reassurance svg { width: 18px; height: 18px; }
+
+.trust-band { background: var(--bg); text-align: center; padding: 48px 0; }
+.trust-band .eyebrow { font-size: 12px; letter-spacing: .12em; font-weight: 600; color: var(--text-subtle); }
+.trust-logos { display: flex; gap: 48px; justify-content: center; flex-wrap: wrap; margin-top: 28px; font-size: 22px; font-weight: 700; color: #b6c2d2; }
+
+.how { background: #fff; padding: 80px 0; text-align: center; }
+.how h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 48px; text-align: left; }
+.step { border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); }
+.step .num { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 17px; }
+.step:nth-child(1) .num { background: linear-gradient(135deg, #7a73ff, #635bff); }
+.step:nth-child(2) .num { background: linear-gradient(135deg, #b14bd8, #ff4d8d); }
+.step:nth-child(3) .num { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+.step h3 { font-size: 18px; font-weight: 700; margin: 20px 0 8px; }
+.step p { font-size: 14px; color: var(--text-muted); }
+
+/* ============================================================
+   P1-02 — Aperçu gratuit
+   ============================================================ */
+.vehicle-card { display: flex; align-items: center; gap: 24px; }
+.vehicle-card .photo {
+  width: 160px; height: 100px; border-radius: 10px; background: #eef1f6; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; color: var(--text-subtle);
+}
+.vehicle-card .photo svg { width: 34px; height: 34px; }
+.vehicle-card h2 { font-size: 26px; font-weight: 700; }
+.vehicle-card .specs { color: var(--text-muted); font-size: 14px; margin-top: 6px; }
+.vehicle-card .ids { display: flex; align-items: center; gap: 12px; margin-top: 10px; font-size: 13px; color: var(--text-muted); }
+.coverage { margin-left: auto; background: var(--bg); border-radius: 10px; padding: 14px 16px; width: 248px; }
+.coverage .ttl { font-size: 12px; color: var(--text-muted); }
+.coverage .val { font-size: 14px; font-weight: 600; margin-top: 6px; }
+.coverage .bars { display: flex; gap: 5px; margin-top: 12px; }
+.coverage .bars i { height: 6px; width: 36px; border-radius: 3px; background: var(--primary); }
+.coverage .bars i.off { background: #d6deea; }
+
+.data-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 36px; }
+.data-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+.data-card .lbl { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+.data-card .lbl svg { width: 16px; height: 16px; color: var(--primary); }
+.data-card .big { font-size: 24px; font-weight: 700; margin: 12px 0 16px; }
+.locked { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-subtle); background: var(--bg); border: 1px dashed var(--border); border-radius: 8px; padding: 9px 12px; }
+.locked svg { width: 14px; height: 14px; }
+
+.cta-unlock { background: var(--primary-tint); border-radius: 18px; text-align: center; padding: 48px 24px; }
+.cta-unlock h2 { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; }
+.cta-unlock p { color: var(--text-muted); max-width: 560px; margin: 14px auto 0; }
+.price { display: flex; align-items: flex-start; justify-content: center; gap: 6px; margin: 28px 0; }
+.price .amount { font-size: 52px; font-weight: 800; color: var(--primary); line-height: 1; }
+.price .ttc { font-size: 14px; color: var(--text-muted); align-self: flex-end; margin-bottom: 6px; }
+.cta-unlock .note { font-size: 13px; color: var(--text-subtle); margin-top: 18px; }
+
+/* ============================================================
+   P1-03 — Compte + Paiement
+   ============================================================ */
+.page-title { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; margin: 8px 0 24px; }
+.checkout { display: grid; grid-template-columns: 1fr 360px; gap: 28px; align-items: start; }
+.step-num { color: var(--primary); }
+.checkout h3 { font-size: 19px; font-weight: 700; margin-bottom: 22px; }
+.form-field { margin-bottom: 18px; }
+.form-field label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 8px; }
+.form-field .input-wrap { position: relative; }
+.form-field input {
+  width: 100%; height: 44px; border: 1px solid var(--border); border-radius: 10px;
+  padding: 0 14px; font-size: 15px; font-family: inherit; color: var(--text);
+}
+.form-field input:focus { outline: 2px solid var(--primary); border-color: var(--primary); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.divider-or { display: flex; align-items: center; gap: 14px; color: var(--text-subtle); font-size: 13px; margin: 22px 0; }
+.divider-or::before, .divider-or::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.btn-outline { width: 100%; height: 44px; }
+.secure-line { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); margin: 18px 0; }
+.secure-line svg { width: 14px; height: 14px; color: var(--success); }
+
+.recap { position: sticky; top: 24px; }
+.recap .row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
+.recap .muted { color: var(--text-muted); font-size: 13px; }
+.recap hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+.recap .total { display: flex; justify-content: space-between; align-items: baseline; }
+.recap .total .lbl { font-size: 16px; font-weight: 600; }
+.recap .total .amt { font-size: 26px; font-weight: 800; }
+.recap .vat { font-size: 12px; color: var(--text-subtle); margin-top: 6px; }
+.checklist { margin-top: 18px; }
+.checklist .row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+.checklist svg { width: 18px; height: 18px; color: var(--success); flex-shrink: 0; }
+
+/* ============================================================
+   P1-04 — Rapport complet
+   ============================================================ */
+.report-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.report-header h1 { font-size: 30px; font-weight: 700; margin-top: 12px; letter-spacing: -0.02em; }
+.report-header .meta { color: var(--text-subtle); font-size: 13px; margin-top: 8px; }
+.actions { display: flex; gap: 12px; flex-shrink: 0; }
+
+table { width: 100%; border-collapse: collapse; }
+.table-wrap { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+thead th { text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-subtle); padding: 12px 18px; border-bottom: 1px solid var(--border); background: #fafbfc; }
+tbody td { padding: 13px 18px; font-size: 14px; border-bottom: 1px solid var(--border); }
+tbody tr:last-child td { border-bottom: none; }
+tbody .km { font-weight: 600; }
+tr.flag { background: var(--warning-tint); }
+tr.flag td:first-child { box-shadow: inset 3px 0 0 var(--warning); }
+.source-cell { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+.event { display: flex; gap: 16px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 14px; }
+.event .thumb { width: 72px; height: 54px; border-radius: 8px; background: #eef1f6; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--text-subtle); }
+.event .thumb svg { width: 22px; height: 22px; }
+.event-meta { display: flex; align-items: center; gap: 10px; }
+.event-meta .date { font-size: 13px; color: var(--text-subtle); }
+.event h3 { font-size: 16px; font-weight: 600; margin-top: 6px; }
+.event p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+.notice { display: flex; align-items: center; gap: 10px; background: var(--success-tint); color: var(--success); font-size: 13px; font-weight: 500; padding: 11px 16px; border-radius: 8px; }
+.notice svg { width: 16px; height: 16px; }
+
+.status-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.status-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+.status-card .label { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-muted); }
+.status-card .label svg { width: 14px; height: 14px; color: var(--success); }
+.status-card .value { font-size: 15px; font-weight: 600; margin-top: 8px; }
+
+.owners { display: grid; grid-template-columns: 240px 1fr; gap: 20px; }
+.owner-count { background: var(--primary-tint); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; justify-content: center; }
+.owner-count .big { font-size: 52px; font-weight: 800; color: var(--primary); line-height: 1; }
+.owner-count .lbl { font-size: 14px; font-weight: 600; margin-top: 10px; }
+.owner-count .sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+.usage-list { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.usage-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 500; }
+.usage-row:last-child { border-bottom: none; }
+.pill { font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 999px; }
+.pill-yes { background: var(--success-tint); color: var(--success); display: inline-flex; align-items: center; gap: 6px; }
+.pill-yes svg { width: 12px; height: 12px; }
+.pill-no { background: #eef1f6; color: var(--text-subtle); }
+
+/* ============================================================
+   P1-05 — Modale Export & partage
+   ============================================================ */
+.modal-overlay { position: fixed; inset: 0; background: rgba(10, 37, 64, 0.45); display: none; align-items: center; justify-content: center; z-index: 50; padding: 24px; }
+.modal-overlay.open { display: flex; }
+.modal { background: #fff; border-radius: 16px; box-shadow: var(--shadow-lg); width: 520px; max-width: 100%; padding: 24px 28px 28px; }
+.modal-head { display: flex; align-items: center; justify-content: space-between; }
+.modal-head h2 { font-size: 21px; font-weight: 700; }
+.modal-close { width: 32px; height: 32px; border: none; background: none; cursor: pointer; color: var(--text-muted); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: var(--bg); }
+.modal-close svg { width: 18px; height: 18px; }
+.modal hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+.modal-sub { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+.modal-action { width: 100%; height: 49px; margin-bottom: 14px; }
+.modal-divider { display: flex; align-items: center; gap: 14px; color: var(--text-subtle); font-size: 13px; margin: 6px 0 18px; }
+.modal-divider::before, .modal-divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.copy-label { font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 8px; }
+.copy-row { display: flex; gap: 10px; }
+.copy-input { flex: 1; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 10px; padding: 0 14px; height: 42px; font-size: 13px; color: var(--text-muted); background: var(--bg); overflow: hidden; }
+.copy-input svg { width: 15px; height: 15px; flex-shrink: 0; }
+.copy-input span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.copy-btn { height: 42px; }
+.modal-foot { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-muted); margin-top: 18px; }
+.modal-foot svg { width: 16px; height: 16px; color: var(--success); flex-shrink: 0; margin-top: 2px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .hero h1 { font-size: 38px; }
+  .search-card { grid-template-columns: 1fr; }
+  .steps, .data-cards, .status-grid { grid-template-columns: 1fr 1fr; }
+  .checkout { grid-template-columns: 1fr; }
+  .recap { position: static; }
+  .report-header { flex-direction: column; }
+  .owners { grid-template-columns: 1fr; }
+  .vehicle-card { flex-wrap: wrap; }
+  .coverage { margin-left: 0; width: 100%; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .steps, .data-cards, .status-grid, .form-row { grid-template-columns: 1fr; }
+  .reassurance { flex-direction: column; gap: 10px; align-items: center; }
+}
+
+@media print {
+  body { background: #fff; }
+  .actions, .site-header, .breadcrumb, .modal-overlay { display: none !important; }
+  .card { box-shadow: none; break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="index.html"><span class="mark"></span>Historique Véhicule</a>
+    <nav class="nav"><a href="#">Mes rapports</a><a href="#" class="active">Mon compte</a></nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- Report header -->
+  <section class="card report-header">
+    <div>
+      <span class="badge badge-success">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Rapport complet
+      </span>
+      <h1>Renault Clio IV</h1>
+      <p class="meta">AB-123-CD · VIN VF1RFB00X12345678 · Généré le 22/06/2026</p>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Exporter PDF
+      </button>
+      <button class="btn btn-primary" onclick="openModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Partager
+      </button>
+    </div>
+  </section>
+
+  <!-- Kilométrage -->
+  <section class="card">
+    <div class="section-head">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+        Kilométrage
+      </div>
+      <span class="badge badge-warning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Baisse anomalie détectée
+      </span>
+    </div>
+    <p class="section-sub">4 relevés enregistrés. Un kilométrage en baisse entre deux dates peut signaler un compteur trafiqué.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:160px">Date</th><th style="width:210px">Kilométrage</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>06/2018</td><td class="km">5 000 km</td><td>Première immatriculation</td></tr>
+          <tr><td>04/2020</td><td class="km">38 500 km</td><td>Contrôle technique</td></tr>
+          <tr class="flag">
+            <td>09/2021</td><td class="km">30 200 km</td>
+            <td><div class="source-cell"><span>Entretien concession</span>
+              <span class="badge badge-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Incohérence</span></div></td>
+          </tr>
+          <tr><td>05/2023</td><td class="km">72 100 km</td><td>Contrôle technique</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Sinistres -->
+  <section class="card">
+    <div class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Sinistres &amp; dommages
+    </div>
+    <p class="section-sub">2 événements connus. Descriptions issues des déclarations d'assurance et rapports d'expertise.</p>
+    <div class="event">
+      <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5L9 20"/></svg></div>
+      <div>
+        <div class="event-meta"><span class="date">03/2021</span><span class="badge badge-warning">Modéré</span></div>
+        <h3>Choc arrière</h3>
+        <p>Réparation du pare-chocs et du feu arrière droit. Déclaré à l'assurance, réparé en atelier agréé.</p>
+      </div>
+    </div>
+    <div class="event">
+      <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5L9 20"/></svg></div>
+      <div>
+        <div class="event-meta"><span class="date">11/2022</span><span class="badge badge-neutral">Léger</span></div>
+        <h3>Impact latéral léger</h3>
+        <p>Rayures sur la portière avant gauche, sans intervention structurelle.</p>
+      </div>
+    </div>
+    <div class="notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Avant 2021 : aucun sinistre connu sur ce véhicule.
+    </div>
+  </section>
+
+  <!-- Statut légal -->
+  <section class="card">
+    <div class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Statut légal
+    </div>
+    <p class="section-sub">Aucun statut bloquant détecté à la date de génération du rapport.</p>
+    <div class="status-grid">
+      <div class="status-card"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Véhicule volé</div><div class="value">Non signalé</div></div>
+      <div class="status-card"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Gage / financement</div><div class="value">Aucun gage actif</div></div>
+      <div class="status-card"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Fourrière</div><div class="value">Aucun enregistrement</div></div>
+      <div class="status-card"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Destruction / VHU</div><div class="value">Non détruit</div></div>
+    </div>
+  </section>
+
+  <!-- Propriétaires -->
+  <section class="card">
+    <div class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Propriétaires &amp; usage
+    </div>
+    <p class="section-sub">Nombre de détenteurs successifs et usages déclarés du véhicule.</p>
+    <div class="owners">
+      <div class="owner-count">
+        <span class="big">4</span>
+        <span class="lbl">propriétaires successifs</span>
+        <span class="sub">Première main : non</span>
+      </div>
+      <div class="usage-list">
+        <div class="usage-row"><span>Usage déclaré</span><span class="pill pill-yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Particulier</span></div>
+        <div class="usage-row"><span>Taxi / VTC</span><span class="pill pill-no">Non</span></div>
+        <div class="usage-row"><span>Location / flotte</span><span class="pill pill-no">Non</span></div>
+        <div class="usage-row"><span>Véhicule importé</span><span class="pill pill-no">Non</span></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="logo" href="index.html"><span class="mark"></span>Historique Véhicule</a>
+        <p>L'historique complet d'un véhicule d'occasion : kilométrage, sinistres, statut légal et propriétaires, en quelques secondes.</p>
+      </div>
+      <div class="footer-col"><h4>Produit</h4><a href="#">Recherche</a><a href="#">Tarifs à l'unité</a><a href="#">API &amp; intégrations</a><a href="#">Pays couverts</a></div>
+      <div class="footer-col"><h4>Ressources</h4><a href="#">Guide d'achat</a><a href="#">Questions fréquentes</a><a href="#">Blog</a><a href="#">Centre d'aide</a></div>
+      <div class="footer-col"><h4>Entreprise</h4><a href="#">À propos</a><a href="#">Contact</a><a href="#">Partenaires</a></div>
+      <div class="footer-col"><h4>Légal</h4><a href="#">CGU</a><a href="#">Confidentialité</a><a href="#">Cookies</a><a href="#">Mentions légales</a></div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>© 2026 Historique Véhicule. Tous droits réservés.</span>
+      <div class="socials"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</footer>
+
+<!-- P1-05 · Modale Export & partage -->
+<div class="modal-overlay" id="shareModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <div class="modal-head">
+      <h2 id="shareTitle">Exporter &amp; partager le rapport</h2>
+      <button class="modal-close" onclick="closeModal()" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <hr />
+    <div class="modal-sub">
+      <span class="badge badge-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Rapport complet</span>
+      <span>Renault Clio IV · AB-123-CD</span>
+    </div>
+    <button class="btn btn-primary modal-action" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Télécharger en PDF
+    </button>
+    <button class="btn btn-outline modal-action" onclick="revealLink()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      Générer un lien de partage
+    </button>
+    <div class="modal-divider">lien de partage</div>
+    <div>
+      <div class="copy-label">Lien copiable</div>
+      <div class="copy-row">
+        <div class="copy-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <span id="shareLink">historique-vehicule.fr/r/ab123cd-9f2e</span>
+        </div>
+        <button class="btn copy-btn" onclick="copyLink(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copier
+        </button>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Le rapport reste accessible à tout moment dans votre espace personnel.
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal() { document.getElementById('shareModal').classList.add('open'); }
+  function closeModal() { document.getElementById('shareModal').classList.remove('open'); }
+  function revealLink() { /* lien déjà visible dans ce proto ; effet visuel léger */ document.querySelector('.copy-input').animate([{opacity:.4},{opacity:1}], {duration:300}); }
+  function copyLink(btn) {
+    const link = document.getElementById('shareLink').textContent;
+    navigator.clipboard.writeText('https://' + link).then(() => {
+      const old = btn.innerHTML;
+      btn.textContent = 'Copié ✓';
+      setTimeout(() => { btn.innerHTML = old; }, 1600);
+    }).catch(() => alert('Lien : https://' + link));
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
